@@ -3,17 +3,17 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import './CustomCard.scss'
 
-export const CustomCard = () => {
+export const CustomCard = ({ id, name, description, dueDate, onRemove }) => {
   return (
-    <Card style={{ width: '18rem' }}>
+    <Card className="mb-3">
       <Card.Body>
-        <Card.Title>Card Title</Card.Title>
-        <Card.Text>
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </Card.Text>
-        <Button variant="primary">Go somewhere</Button>
+        <Card.Title>{name}</Card.Title>
+        <Card.Text>{description}</Card.Text>
+        <Card.Text><strong>Due Date:</strong> {dueDate}</Card.Text>
+        <Button variant="danger" onClick={() => onRemove(id)}>
+          Eliminar
+        </Button>
       </Card.Body>
     </Card>
-  )
-}
+  );
+};
