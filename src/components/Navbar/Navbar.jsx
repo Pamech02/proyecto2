@@ -19,8 +19,8 @@ const CustomNavbar = ({ onSelectSection }) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link onClick={() => onSelectSection('tasks')}>Tasks</Nav.Link>
-            <Nav.Link onClick={() => onSelectSection('goals')}>Goals</Nav.Link>
+            <Nav.Link onClick={() => onSelectSection(0)}>Tasks</Nav.Link>
+            <Nav.Link onClick={() => onSelectSection(1)}>Goals</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

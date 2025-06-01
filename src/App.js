@@ -4,45 +4,110 @@ import { CustomCard } from './components/Cards/CustomCard';
 import CustomNavbar from './components/Navbar/Navbar';
 import AddGoalForm from './components/Forms/AddGoalForm';
 import { Container, Row, Col } from 'react-bootstrap';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import AddTaskForm from './components/Forms/AddTaskForm';
+import { useDispatch, useSelector } from "react-redux"
+import { getGoals, getTasks } from './store/slices/thunks';
+
 
 function App() {
 
-   const [tasks, setTasks] = useState([{ id: 1, name: 'nada', description: 'nada' }]);
+  const [view, setView] = useState(0)
+  const dispatch = useDispatch();
+  const { tasks, goals } = useSelector((state) => state.goal);
 
-  const handleAddGoal = (newGoal) => {
-    const newTask = {
-      id: Date.now(), 
-      ...newGoal
+  const handleAddGoal = () => {
+    dispatch(getGoals())
+  };
+
+  const handleAddTask = () => {
+    dispatch(getTasks())
+  };
+
+  const handleRemoveTask = async (id) => {
+    const deleteItem = {
+      id
     };
-    setTasks((prevTasks) => [...prevTasks, newTask]);
+
+    await fetch('http://localhost:3003/removeTask', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `12345-mi-apikey-secreta`
+      },
+      body: JSON.stringify(deleteItem)
+    })
+    dispatch(getTasks())
   };
 
-  const handleRemoveTask = (id) => {
-    setTasks((prevTasks) => prevTasks.filter(task => task.id !== id));
+  const handleRemoveGoal = async (id) => {
+    const deleteItem = {
+      id
+    };
+
+    await fetch('http://localhost:3003/removeGoal', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `12345-mi-apikey-secreta`
+      },
+      body: JSON.stringify(deleteItem)
+    })
+    dispatch(getGoals())
   };
+
+  const onSelectSection = (view1) => {
+    setView(view1)
+  }
+
+  useEffect(() => {
+    dispatch(getTasks())
+    dispatch(getGoals())
+  }, [])
 
   return (
-      <div className="App">
-      <CustomNavbar />
+    <div className="App">
+      <CustomNavbar onSelectSection={onSelectSection} />
       <Container className="mt-4">
-        <Row>
-          <Col md={4}>
-            <AddGoalForm onAddGoal={handleAddGoal} />
-          </Col>
-          <Col md={8}>
-            {tasks.map((item) => (
-              <CustomCard
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                description={item.description}
-                dueDate={item.dueDate}
-                onRemove={handleRemoveTask}
-              />
-            ))}
-          </Col>
-        </Row>
+        {view === 0 ? (
+          <Row>
+            <Col md={4}>
+              <AddTaskForm onAddGoal={handleAddTask} />
+            </Col>
+            <Col md={8}>
+              {tasks.map((item) => (
+                <CustomCard
+                  key={item._id}
+                  id={item._id}
+                  name={item.nombre}
+                  description={item.description}
+                  dueDate={item.dueDate}
+                  onRemove={handleRemoveTask}
+                />
+              ))}
+            </Col>
+          </Row>
+        ) : (
+          <Row>
+            <Col md={4}>
+
+              <AddGoalForm onAddGoal={handleAddGoal} />
+            </Col>
+            <Col md={8}>
+              {goals.map((item) => (
+                <CustomCard
+                  key={item._id}
+                  id={item._id}
+                  name={item.nombre}
+                  description={item.description}
+                  dueDate={item.dueDate}
+                  onRemove={handleRemoveGoal}
+                />
+              ))}
+            </Col>
+          </Row>
+        )}
+
       </Container>
     </div>
   );

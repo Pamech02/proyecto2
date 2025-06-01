@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
-const AddGoalForm = ({ onAddGoal }) => {
+const AddTaskForm = ({ onAddGoal }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -16,18 +16,18 @@ const AddGoalForm = ({ onAddGoal }) => {
       dueDate
     };
 
-   const resp = await fetch('http://localhost:3003/addGoal',{
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `12345-mi-apikey-secreta`
-              },
-              body:JSON.stringify(newItem)
-          })
-          console.log(resp)
+    const resp = await fetch('http://localhost:3003/addTask', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `12345-mi-apikey-secreta`
+      },
+      body: JSON.stringify(newItem)
+    })
 
     onAddGoal()
 
+    // limpiar formulario
     setName('');
     setDescription('');
     setDueDate('');
@@ -35,7 +35,7 @@ const AddGoalForm = ({ onAddGoal }) => {
 
   return (
     <Form onSubmit={handleSubmit} className="p-3 border rounded bg-light">
-      <h4 className="mb-4 text-center">Agregar Goal</h4>
+      <h4 className="mb-4 text-center">Agregar Task</h4>
 
       <Form.Group className="mb-3" controlId="formName">
         <Form.Label>Nombre</Form.Label>
@@ -73,4 +73,4 @@ const AddGoalForm = ({ onAddGoal }) => {
   );
 };
 
-export default AddGoalForm;
+export default AddTaskForm;
